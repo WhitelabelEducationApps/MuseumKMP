@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.whitelabel.core.AppConfig
 import com.whitelabel.core.presentation.home.ViewMode
 import com.whitelabel.platform.presentation.screens.home.CatalogNavigationDrawer
 import com.whitelabel.platform.presentation.screens.home.DrawerMenuItem
@@ -30,20 +31,15 @@ fun HomeDrawerContent(
     onViewModeChange: (ViewMode) -> Unit,
     onLanguageClick: () -> Unit,
     onCloseDrawer: () -> Unit,
+    appConfig: AppConfig,
     modifier: Modifier = Modifier
 ) {
     logLifecycle(TAG, "Composable entered, currentViewMode=$viewMode")
-    
-    val menuItems = listOf(
+    val menuItems = mutableListOf(
         DrawerMenuItem(
             label = "Grid View",
             icon = Res.drawable.grid_view,
             viewMode = ViewMode.Grid
-        ),
-        DrawerMenuItem(
-            label = "Map View",
-            icon = Res.drawable.map,
-            viewMode = ViewMode.Map
         ),
         DrawerMenuItem(
             label = "Language",
@@ -52,6 +48,14 @@ fun HomeDrawerContent(
             onClick = onLanguageClick
         )
     )
+
+    if (appConfig.enableMap) {
+        menuItems.add(1, DrawerMenuItem(
+            label = "Map View",
+            icon = Res.drawable.map,
+            viewMode = ViewMode.Map
+        ))
+    }
 
     CatalogNavigationDrawer(
         currentViewMode = viewMode,

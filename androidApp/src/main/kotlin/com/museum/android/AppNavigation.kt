@@ -16,6 +16,7 @@ import com.museum.presentation.screens.detail.DetailScreen
 import com.museum.presentation.screens.detail.DetailViewModel
 import com.museum.presentation.screens.home.HomeScreen
 import com.museum.presentation.screens.home.HomeViewModel
+import com.whitelabel.core.AppConfig
 import com.whitelabel.core.presentation.home.ViewMode
 import com.museum.presentation.screens.language.LanguageSelectionScreen
 import com.museum.presentation.screens.language.LanguageSelectionViewModel
@@ -53,6 +54,7 @@ fun AppNavigation() {
             ) { backStackEntry ->
                 val siteId = backStackEntry.arguments?.getLong("siteId") ?: return@composable
                 val viewModel: SiteDetailViewModel = koinInject { parametersOf(siteId) }
+                val appConfig: AppConfig = koinInject()
 
                 SiteDetailScreen(
                     viewModel = viewModel,
@@ -64,7 +66,8 @@ fun AppNavigation() {
                         navController.navigate("home") {
                             popUpTo("home") { inclusive = true }
                         }
-                    }
+                    },
+                    appConfig = appConfig
                 )
             }
 

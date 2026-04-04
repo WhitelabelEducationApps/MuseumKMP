@@ -21,6 +21,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.museum.utils.LOG
+import com.whitelabel.core.AppConfig
 import com.whitelabel.core.presentation.home.ViewMode
 import com.whitelabel.platform.utils.debugLogD
 import com.whitelabel.platform.utils.logFunctionEntry
@@ -28,6 +29,7 @@ import com.whitelabel.platform.utils.logLifecycle
 import com.whitelabel.platform.utils.logStateChange
 import com.whitelabel.platform.utils.logUserAction
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 private const val TAG = "HomeScreen"
 
@@ -41,11 +43,12 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     logLifecycle(TAG, "Composable entered")
-    
+
     val uiState by viewModel.uiState.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
     val viewMode by viewModel.viewMode.collectAsState()
     val focusedSiteId by viewModel.focusedItemId.collectAsState()
+    val appConfig: AppConfig = koinInject()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var searchActive by rememberSaveable { mutableStateOf(false) }
@@ -90,6 +93,7 @@ fun HomeScreen(
                     logUserAction(TAG, "opened language selection")
                     onNavigateToLanguage()
                 },
+                appConfig = appConfig,
                 onCloseDrawer = { scope.launch { drawerState.close() } }
             )
         }

@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +24,7 @@ import com.museum.utils.LOG
 import com.museum.utils.getDrawableResourceId
 import com.museum.utils.getPrimaryColor
 import com.museum.utils.toDrawableResourceName
+import com.whitelabel.core.AppConfig
 import com.whitelabel.platform.presentation.screens.detail.GenericDetailScreen
 import com.whitelabel.platform.utils.debugLogD
 import com.whitelabel.platform.utils.logLifecycle
@@ -41,7 +43,8 @@ fun SiteDetailScreen(
     viewModel: SiteDetailViewModel,
     onBackClick: () -> Unit,
     onShowFullImage: (Long) -> Unit,
-    onShowOnMap: (Long) -> Unit
+    onShowOnMap: (Long) -> Unit,
+    appConfig: AppConfig
 ) {
     logLifecycle(TAG, "Composable entered")
     
@@ -68,7 +71,7 @@ fun SiteDetailScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalAlignment = Alignment.End
             ) {
-                if (site.latitude != null && site.longitude != null) {
+                if (site.latitude != null && site.longitude != null && appConfig.enableMap) {
                     debugLogD(TAG, "Showing map FAB (lat=${site.latitude}, lng=${site.longitude})")
                     SmallFloatingActionButton(
                         onClick = {
@@ -88,18 +91,20 @@ fun SiteDetailScreen(
                         onShowFullImage(site.id)
                     }
                 ) {
+                    val fullscreenPainter = painterResource(Res.drawable.fullscreen)
                     Icon(
-                        painter = painterResource(Res.drawable.fullscreen),
+                        painter = fullscreenPainter,
                         contentDescription = "View Fullscreen"
                     )
                 }
             }
         },
-        content = { site, localizedGroupName ->
+        content = { site, localizedGroupName, paddingValues ->
             debugLogD(TAG, "Rendering content for site ${site.id}, group=$localizedGroupName")
             SiteDetailContent(
                 site = site,
-                localizedCountries = localizedGroupName ?: ""
+                localizedCountries = localizedGroupName ?: "",
+                modifier = Modifier.padding(paddingValues)
             )
         }
     )
