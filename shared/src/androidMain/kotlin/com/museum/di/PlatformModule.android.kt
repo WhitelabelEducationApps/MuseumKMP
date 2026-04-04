@@ -9,5 +9,5 @@ actual val appPlatformModule = module {
     // DatabaseDriverFactory - Android implementation
     single { DatabaseDriverFactory(androidContext(), "heritage_sites.db") }
     // App configuration
-    single { AppConfig(enableMap = true) }
+    single { AppConfig(enableMap = true, enableCategories = true) }
 }
