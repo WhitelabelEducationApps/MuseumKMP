@@ -1,26 +1,23 @@
-﻿package com.museum.android
+package com.museum.android
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.museum.presentation.theme.MuseumTheme
+import com.whitelabel.platform.presentation.theme.HerbalTheme
+import com.whitelabel.platform.WhitelabelActivity
+import com.whitelabel.platform.presentation.AppNavigation
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContent {
-            MuseumTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    AppNavigation()
-                }
+class MainActivity : WhitelabelActivity() {
+    @Composable
+    override fun createContent() {
+        HerbalTheme {
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
+            ) {
+                AppNavigation()
             }
         }
     }

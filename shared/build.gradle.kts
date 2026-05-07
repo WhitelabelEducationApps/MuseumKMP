@@ -1,19 +1,13 @@
-﻿plugins {
+plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.sqldelight)
     alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.composeCompiler)
 }
 
 kotlin {
-    androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "17"
-            }
-        }
-    }
-    
+    androidTarget()
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -28,13 +22,15 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                api("com.whitelabel:core:0.1.0")
+                api("com.whitelabel:platform:0.1.0")
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material3)
                 implementation(compose.ui)
                 implementation(compose.components.resources)
+                implementation(compose.materialIconsExtended)
                 implementation(libs.kotlinx.coroutines.core)
-                implementation(libs.sqldelight.coroutines)
                 implementation(libs.kermit)
                 implementation(libs.coil.compose)
                 implementation(libs.coil.network.ktor)
@@ -47,33 +43,36 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(libs.kotlinx.coroutines.test)
-                implementation(libs.mockk)
                 implementation(libs.turbine)
+            }
+        }
+
+        val androidUnitTest by getting {
+            dependencies {
+                implementation(libs.mockk)
             }
         }
 
         val androidMain by getting {
             dependencies {
-                implementation(libs.sqldelight.driver.android)
-                implementation(libs.androidx.lifecycle.viewmodel)
-                implementation(libs.androidx.lifecycle.runtime.compose)
+                implementation(libs.maps.compose)
+                implementation(libs.play.services.maps)
+                implementation(libs.maps.compose.utils)
                 implementation(libs.ktor.client.okhttp)
                 implementation(libs.ktor.client.logging)
                 implementation(libs.koin.android)
                 implementation(libs.koin.compose)
-                implementation(libs.maps.compose)
-                implementation(libs.play.services.maps)
-                implementation(libs.maps.compose.utils)
+                implementation(libs.androidx.palette.core)
+                implementation(libs.androidx.datastore)
+                implementation(libs.play.services.location)
+                implementation(libs.androidx.activity.compose)
             }
         }
 
         val iosMain by creating {
             dependsOn(commonMain)
-            dependencies {
-                implementation(libs.sqldelight.driver.native)
-            }
         }
-        
+
         val iosX64Main by getting { dependsOn(iosMain) }
         val iosArm64Main by getting { dependsOn(iosMain) }
         val iosSimulatorArm64Main by getting { dependsOn(iosMain) }
@@ -82,10 +81,10 @@ kotlin {
 
 android {
     namespace = "com.museum.shared"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
-        minSdk = 24
+        minSdk = 23
     }
 
     compileOptions {
@@ -96,16 +95,6 @@ android {
     packaging {
         jniLibs {
             useLegacyPackaging = false
-        }
-    }
-}
-
-sqldelight {
-    databases {
-        create("MuseumDatabase") {
-            packageName.set("com.museum.data.local")
-            schemaOutputDirectory.set(file("src/main/sqldelight/com/museum/data/local"))
-            version=1
         }
     }
 }

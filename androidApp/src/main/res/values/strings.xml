@@ -1,4 +1,36 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">World Heritage Sites</string>
+
+    <!-- Search UI -->
+    <string name="search_placeholder">Search…</string>
+    <string name="close_search">Close search</string>
+    <string name="clear_search">Clear search</string>
+    <string name="search">Search</string>
+
+    <!-- Navigation -->
+    <string name="menu">Menu</string>
+    <string name="back">Back</string>
+
+    <!-- Messages -->
+    <string name="wallpaper_success">Wallpaper set successfully!</string>
+
+    <!-- Language -->
+    <string name="select_language">Select Language</string>
+    <string name="automatic">Automatic</string>
+    <string name="selected">Selected</string>
+
+    <!-- View Options -->
+    <string name="grid_view">Grid View</string>
+    <string name="map_view">Map View</string>
+    <string name="language">Language</string>
+    <string name="view_options">View Options</string>
+    <string name="location_relevant_items_only">Local sites only</string>
+    <string name="location_filter_banner">%1$d/%2$d sites near you</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title">Explore Heritage Sites</string>
+    <string name="onboarding_message">Browse over 1,000 UNESCO World Heritage Sites. Use the side menu to switch between grid and map views, or change the display language.</string>
+    <string name="onboarding_ok">Got it</string>
+    <string name="location_permission_denied">Location permission denied. Filter disabled.</string>
 </resources>
