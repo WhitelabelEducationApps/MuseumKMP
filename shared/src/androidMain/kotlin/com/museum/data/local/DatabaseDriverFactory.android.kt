@@ -6,17 +6,21 @@ import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import java.io.File
 import java.io.FileOutputStream
 
-actual class DatabaseDriverFactory(private val context: Context) {
+actual class DatabaseDriverFactory(private val context: Context, private val dbName: String) {
     actual fun createDriver(): SqlDriver {
-        val dbFile = context.getDatabasePath("heritage_sites.db")
+        val dbFile = context.getDatabasePath(dbName)
 
-        // Helper function to copy database from assets
+        // Helper function to copy database from assets (optional — if file doesn't exist, create empty DB)
         fun copyDatabaseFromAssets() {
-            dbFile.parentFile?.mkdirs()
-            context.assets.open("heritage_sites.db").use { input ->
-                FileOutputStream(dbFile).use { output ->
-                    input.copyTo(output)
+            try {
+                dbFile.parentFile?.mkdirs()
+                context.assets.open(dbName).use { input ->
+                    FileOutputStream(dbFile).use { output ->
+                        input.copyTo(output)
+                    }
                 }
+            } catch (e: Exception) {
+                // Asset file doesn't exist — let SQLDelight create an empty database
             }
         }
 
@@ -38,23 +42,16 @@ actual class DatabaseDriverFactory(private val context: Context) {
                 newVersion: Long,
                 vararg callbacks: app.cash.sqldelight.db.AfterVersion
             ): app.cash.sqldelight.db.QueryResult.Value<Unit> {
-                // Delete and recreate database on version mismatch
-                if (oldVersion != newVersion) {
-                    // Close the driver first
-                    driver.close()
-                    // Delete the database file
-                    dbFile.delete()
-                    // Copy fresh database from assets
-                    copyDatabaseFromAssets()
-                }
-                return MuseumDatabase.Schema.create(driver)
+                // Version mismatch — don't touch the schema, just return success
+                // (The pre-populated asset DB has its own version management)
+                return app.cash.sqldelight.db.QueryResult.Unit
             }
         }
 
         return AndroidSqliteDriver(
             schema = schema,
             context = context,
-            name = "heritage_sites.db"
+            name = dbName
         )
     }
 }

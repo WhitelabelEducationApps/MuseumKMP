@@ -79,10 +79,12 @@ class HeritageSiteLocalDataSource(
     suspend fun updateFavorite(id: Long, isFavorite: Boolean) {
         com.museum.utils.LOG("HeritageSiteLocalDataSource.updateFavorite() - CALLED id=$id, isFavorite=$isFavorite")
         withContext(dispatcher) {
-            heritageQueries.updateFavorite(
-                isFavourite = if (isFavorite) "true" else "false",
-                id = id
-            )
+            database.transaction {
+                heritageQueries.updateFavorite(
+                    isFavourite = if (isFavorite) "true" else "false",
+                    id = id
+                )
+            }
         }
         com.museum.utils.LOG("HeritageSiteLocalDataSource.updateFavorite() - COMPLETE, DATABASE UPDATED")
     }

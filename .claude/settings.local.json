@@ -20,7 +20,16 @@
       "Bash(while true)",
       "Bash(do clear)",
       "Bash(done)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(git remote:*)",
+      "Bash(git branch:*)",
+      "Bash(git rm:*)",
+      "Bash(git config:*)",
+      "Bash(git submodule:*)",
+      "Bash(gh repo:*)",
+      "Bash(gh org:*)",
+      "Bash(gh api:*)",
+      "Bash(git push:*)"
     ]
   }
 }
